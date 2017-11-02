@@ -2,18 +2,18 @@ package com.stl.touristapp.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stl.touristapp.config.SampleJmsMessageSender;
 import com.stl.touristapp.pojo.User;
 import com.stl.touristapp.services.UserService;
 
@@ -27,8 +27,9 @@ public class ApiRestController {
 	//-------------------Retrieve All Users--------------------------------------------------------
     
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> listAllUsers() {
+    public ResponseEntity<List<User>> listAllUsers(HttpServletRequest httpRequest) {
 //    	messageProducer.simpleSend();//jms test
+    	System.out.println("@@@ host:"+httpRequest.getHeader("Host"));
         List<User> users = userService.findAllUsers();
         if(users.isEmpty()){
             return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
@@ -49,4 +50,5 @@ public class ApiRestController {
         }
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
+    
 }

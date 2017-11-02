@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -26,7 +29,6 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
@@ -58,8 +60,8 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
     @Bean
-	public CORSFilter corsFilterBean() throws Exception {
-    	CORSFilter corsFilter = new CORSFilter();
+	public CorsFilter corsFilterBean() throws Exception {
+    	CorsFilter corsFilter = new CorsFilter();
 		return corsFilter;
 	}
     @Bean
@@ -75,7 +77,7 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .exceptionHandling().authenticationEntryPoint(clientAuthenticationEntryPoint()).and()
 		// don't create session
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().authorizeRequests().antMatchers("/oauth/token").permitAll()
+//		.and().authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/oauth/token","/oauth/token/").permitAll()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
         .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
         .and().addFilterBefore(corsFilterBean(), ChannelProcessingFilter.class);

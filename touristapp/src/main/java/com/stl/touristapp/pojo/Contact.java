@@ -1,6 +1,6 @@
 package com.stl.touristapp.pojo;
 
-import java.util.*;
+import java.util.ArrayList;
 /**
  *<p>Title: Contact </p>
  *<p>Description: This is a Model class for Contact</p>
